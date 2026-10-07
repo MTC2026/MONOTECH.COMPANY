@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTC Mono Tech Centre | Next-Gen AI Engineering</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts: Orbitron (Futuristic Header) & Plus Jakarta Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Orbitron"', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace'],
+          },
+          colors: {
+            cyber: {
+              bg: '#030712',
+              card: '#0b1329',
+              border: 'rgba(56, 189, 248, 0.2)',
+              neonCyan: '#00f2fe',
+              neonPurple: '#7928ca',
+              neonMagenta: '#ff007f',
+              glow: '#38bdf8'
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 3s infinite alternate',
+            'float': 'float 6s ease-in-out infinite',
+            'scanline': 'scanline 8s linear infinite',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.2)' },
+              '100%': { boxShadow: '0 0 35px rgba(121, 40, 202, 0.6)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' }
+            },
+            scanline: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+
+    /* Glassmorphic Cyber Effect */
+    .glass-card {
+      background: rgba(11, 19, 41, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+    }
+
+    .neon-text-cyan {
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.5), 0 0 20px rgba(0, 242, 254, 0.3);
+    }
+
+    .neon-text-purple {
+      text-shadow: 0 0 10px rgba(121, 40, 202, 0.5), 0 0 20px rgba(121, 40, 202, 0.3);
+    }
+
+    .neon-border-glow {
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+    }
+
+    /* Grid Overlay */
+    .cyber-grid-bg {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+    }
+
+    canvas#neural-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="cyber-grid-bg min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black relative">
+
+  <!-- Interactive Background Canvas -->
+  <canvas id="neural-bg"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-opacity-70 bg-[#030712] border-b border-cyan-900/40 px-4 md:px-12 py-4 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 via-indigo-600 to-purple-600 p-[1px] shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-400/40 transition-all">
+          <div class="w-full h-full bg-[#030712] rounded-[7px] flex items-center justify-center">
+            <i data-lucide="cpu" class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform"></i>
+          </div>
+        </div>
+        <div>
+          <span class="font-display font-extrabold text-lg md:text-xl tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-200 to-purple-400">
+            MTC
+          </span>
+          <span class="text-[10px] font-mono block text-cyan-400/70 tracking-widest uppercase -mt-1">
+            Mono Tech Centre
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 font-mono text-sm tracking-wide text-slate-300">
+        <a href="#services" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4 text-cyan-500"></i>Services</a>
+        <a href="#founder" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="user-check" class="w-4 h-4 text-cyan-500"></i>Founder</a>
+      </nav>
+
+      <!-- Status Indicator & CTA -->
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-800/50 text-xs font-mono text-cyan-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>SYSTEMS ONLINE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 flex-grow max-w-7xl mx-auto w-full px-4 md:px-8 space-y-24 md:space-y-36 py-12">
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-8 md:pt-16 pb-12 flex flex-col items-center text-center">
+      
+      <!-- Hologram Cyber Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-xs md:text-sm font-mono text-cyan-300 mb-8 border border-cyan-500/30 shadow-lg shadow-cyan-500/10 animate-float">
+        <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400 animate-pulse"></i>
+        <span>Architecting Next-Generation Neural Intelligence</span>
+        <span class="bg-cyan-500/20 text-cyan-300 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">v3.0 Active</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none max-w-5xl">
+        WE BUILD & FINE-TUNE <br>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-500 neon-text-cyan">
+          ADVANCED AI MODELS
+        </span>
+      </h1>
+
+      <p class="mt-6 text-slate-400 text-base sm:text-lg lg:text-xl max-w-2xl font-normal leading-relaxed">
+        From surgical dataset fine-tuning to customized creative chatbot architectures, <span class="text-cyan-300 font-semibold">MTC Mono Tech Centre</span> delivers enterprise-grade AI tailored for high precision and creative intelligence.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="mt-10 flex flex-wrap justify-center gap-4 sm:gap-6">
+        <a href="#services" class="px-8 py-4 rounded-xl bg-cyan-400 text-slate-950 font-display text-sm font-bold tracking-wider hover:bg-cyan-300 transition-all shadow-xl shadow-cyan-500/30 hover:scale-105 flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4"></i> EXPLORE SERVICES
+        </a>
+        <a href="#founder" class="px-8 py-4 rounded-xl glass-card text-cyan-300 font-display text-sm font-bold tracking-wider hover:bg-cyan-950/40 transition-all border border-cyan-500/30 flex items-center gap-2 hover:scale-105">
+          <i data-lucide="user-check" class="w-4 h-4"></i> MEET THE FOUNDER
+        </a>
+      </div>
+
+      <!-- Key Metrics Banner -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+        <div class="glass-card p-4 rounded-xl text-center">
+          <div class="font-display text-2xl md:text-3xl font-extrabold text-cyan-400">99.4%</div>
+          <div class="text-xs font-mono text-slate-400 uppercase mt-1">Accuracy Alignment</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center">
+          <div class="font-display text-2xl md:text-3xl font-extrabold text-purple-400">&lt; 15ms</div>
+          <div class="text-xs font-mono text-slate-400 uppercase mt-1">Inference Latency</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center">
+          <div class="font-display text-2xl md:text-3xl font-extrabold text-cyan-400">100M+</div>
+          <div class="text-xs font-mono text-slate-400 uppercase mt-1">Tokens Processed</div>
+        </div>
+        <div class="glass-card p-4 rounded-xl text-center">
+          <div class="font-display text-2xl md:text-3xl font-extrabold text-indigo-400">Custom</div>
+          <div class="text-xs font-mono text-slate-400 uppercase mt-1">LLM Architectures</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="scroll-mt-28">
+      <div class="text-center mb-16">
+        <span class="text-cyan-400 font-mono text-xs uppercase tracking-widest block mb-2">// CORE CAPABILITIES</span>
+        <h2 class="font-display text-3xl sm:text-5xl font-extrabold text-white">
+          ENGINEERING INTELLIGENCE FROM GROUND UP
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base mt-3 max-w-2xl mx-auto">
+          Complete lifecycle development: from hyper-targeted dataset structuring to multi-modal chatbot deployments.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Service 1 -->
+        <div class="glass-card p-8 rounded-2xl relative group hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
+          <div class="absolute -top-4 -right-4 w-12 h-12 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/30 transition-all"></div>
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="sliders" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white mb-3">Model Fine-Tuning & Alignment</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Surgically adapt open-weights or enterprise LLMs on tailored datasets. We optimize hyper-parameters, LoRA adapters, and RLHF for maximum task specialization.
+            </p>
+          </div>
+          <ul class="space-y-2 font-mono text-xs text-slate-300 border-t border-slate-800/80 pt-4">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i> Custom LoRA & QLoRA Tuning</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i> Domain-Specific Knowledge Distillation</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i> Hallucination Reduction Protocols</li>
+          </ul>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="glass-card p-8 rounded-2xl relative group hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between border-purple-500/30">
+          <div class="absolute -top-4 -right-4 w-12 h-12 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/30 transition-all"></div>
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="bot-message-square" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white mb-3">Creative Chatbot Systems</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Engineered conversational agents with distinct personas, fluid multi-turn context retention, custom memory modules, and real-time tool use.
+            </p>
+          </div>
+          <ul class="space-y-2 font-mono text-xs text-slate-300 border-t border-slate-800/80 pt-4">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400"></i> Personality & Tone Calibration</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400"></i> Long-Term Context Memory Vector Databases</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400"></i> Dynamic API & Tool Integration</li>
+          </ul>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="glass-card p-8 rounded-2xl relative group hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between">
+          <div class="absolute -top-4 -right-4 w-12 h-12 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/30 transition-all"></div>
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-indigo-950/60 border border-indigo-500/40 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+              <i data-lucide="boxes" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-display text-xl font-bold text-white mb-3">End-to-End AI Architecture</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Full pipeline deployment from dataset cleaning and synthetic token generation to inference endpoint optimization and scalable API serving.
+            </p>
+          </div>
+          <ul class="space-y-2 font-mono text-xs text-slate-300 border-t border-slate-800/80 pt-4">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-400"></i> Synthetic Data Generation Pipeline</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-400"></i> Ultra-Fast Quantization (GGUF / AWQ)</li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-400"></i> Dedicated On-Prem & Cloud Inference</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOUNDER SHOWCASE SECTION -->
+    <section id="founder" class="scroll-mt-28">
+      <div class="glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden border border-purple-500/30">
+        
+        <!-- Glowing background orb -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          
+          <!-- Avatar Hologram Badge -->
+          <div class="lg:col-span-5 flex flex-col items-center text-center">
+            <div class="relative group">
+              <div class="w-44 h-44 md:w-52 md:h-52 rounded-full p-[2px] bg-gradient-to-tr from-cyan-400 via-purple-500 to-indigo-600 shadow-2xl shadow-cyan-500/20">
+                <div class="w-full h-full bg-[#030712] rounded-full flex flex-col items-center justify-center p-4 relative overflow-hidden group-hover:scale-95 transition-transform">
+                  <i data-lucide="code-2" class="w-16 h-16 text-cyan-400 mb-2"></i>
+                  <span class="font-display font-extrabold text-xs tracking-wider text-purple-300">DARSHAN N LAL</span>
+                  <span class="text-[9px] font-mono text-cyan-400/80">AI ARCHITECT</span>
+                </div>
+              </div>
+              <div class="absolute -bottom-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-slate-950 font-display font-black text-[10px] uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                FOUNDER & CEO
+              </div>
+            </div>
+          </div>
+
+          <!-- Founder Bio & Story -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 text-purple-400 font-mono text-xs uppercase tracking-widest">
+              <i data-lucide="award" class="w-4 h-4"></i> PRODIGY-LED INNOVATION
+            </div>
+            
+            <h2 class="font-display text-3xl md:text-4xl font-extrabold text-white leading-tight">
+              MEET DARSHAN N LAL
+            </h2>
+
+            <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+              Founded by <span class="text-cyan-300 font-semibold">13-year-old developer & AI architect Darshan N Lal</span>, MTC Mono Tech Centre was built on a bold mission: democratizing deep AI customization and high-speed LLM fine-tuning.
+            </p>
+
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Darshan's forward-thinking approach merges modern neural network training with creative, human-centric chatbot engineering—proving that age is no barrier to mastering cutting-edge machine learning.
+            </p>
+
+            <!-- Mini Specs Grid -->
+            <div class="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono text-xs">
+              <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">AGE / FOUNDER</span>
+                <span class="text-cyan-300 font-bold">13 Years Old</span>
+              </div>
+              <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">CORE FOCUS</span>
+                <span class="text-purple-300 font-bold">LLMs & Chatbots</span>
+              </div>
+              <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 col-span-2 sm:col-span-1">
+                <span class="text-slate-500 block text-[10px]">COMPANY</span>
+                <span class="text-emerald-300 font-bold">Mono Tech Centre</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 border-t border-slate-800/80 bg-[#030712] py-8 text-center text-xs font-mono text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 text-slate-400">
+        <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
+        <span>&copy; 2026 MTC MONO TECH CENTRE</span>
+      </div>
+      <div>
+        FOUNDED BY <span class="text-cyan-300 font-bold">DARSHAN N LAL</span>
+      </div>
+      <div class="text-[10px] text-slate-600">
+        SYSTEM VER: 3.2.0-ULTRA
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // 1. NEURAL NETWORK CANVAS ANIMATION
+    const canvas = document.getElementById('neural-bg');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const particleCount = 45;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
+        this.radius = Math.random() * 2 + 1;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 242, 254, 0.6)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateNeuralBg() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 140) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 242, 254, ${1 - dist / 140 * 0.85})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateNeuralBg);
+    }
+    animateNeuralBg();
+  </script>
+</body>
+</html>
